@@ -1,0 +1,71 @@
+# Here is where you put your bot token.
+TOKEN: NTE2NDkzNzM3NTg1NjcyMTkz.XQphNg.J6TZg34urIw0agKgKFPvMJZKL0M
+
+# A list of channels that log messages will be sent to.
+Log Channels:
+  - 493219184331718706
+  # Un-comment the line below (remove the '#') and set the id here to add another channel.
+  #- 000000000000000000
+
+# The color of the sidebar of the messages. Must be in decimal format.
+# This link will let you pick Hex colors: https://www.google.com/search?q=hex+color+picker&oq=&sourceid=chrome&ie=UTF-8
+# This link will convert Hex colors to decimal: https://www.rapidtables.com/convert/number/hex-to-decimal.html
+Embed Colors:
+  - 600928 # white
+  #- 4379892 # If you add more colors, it will choose random colors.
+
+# The url for the icon at the bottom of your footer image.
+# To use an image sent from discord, right click the image,
+# copy the link, and paste it below.
+Footer Icon URL: https://i.ibb.co/QnJgX2w/Logo-02.png
+
+# The text for the footer of the messages.
+Footer Text: Hero's Tickets
+
+# The text for the online log message - use '{username}' to show the bot's username/
+Online Message: '{username} Online!'
+
+# Command prefix for all commands.
+Prefix: '>'
+
+# Ticket Config
+Tickets:
+  # The name of the role that gets pinged in the ticket channel.
+  Support Role Name: Robot Doc
+
+  # The ID of the support channel.
+  Support Channel ID: 590939131534901284
+
+  # If this is 'true', all conversations in ticket channels will be recorded and sent to
+  # the owner of the ticket after the ticket is closed.
+  # NOTE: This option can get a little bit more intensive on your computer,
+  # so I recommend not using this on lower level servers.
+  Log All Tickets: true
+
+  # The folder where all logs will get stored.
+  Ticket Log Folder: './Cogs/TicketData'
+
+  # The file path for the ticket management file.
+  Data File: './Cogs/TicketData/TicketData.json'
+
+
+# A list of settings which are optional. More explained for each setting.
+Options:
+  # This option will show the timestamp at the end of
+  # the footer of the embedded messages.
+  Embed Timestamp: true
+
+  # This option will delete the user's message after they send a command.
+  # NOTE: THE BOT NEEDS THE 'MANAGE MESSAGES' PERMISSION FOR THIS TO WORK
+  Delete Commands: false
+
+  # This will show the author at the top of the message as the person tho used the command.
+  # Works well in combination with 'Delete Commands'
+  Show Author: true
+
+  # Sets the 'Playing' status of the bot.
+  Game Status:
+    # 'true' will display 'Playing <Game>', 'false' won't display anything.
+    Active: true
+    # The game to display - use '{prefix}' to put in the bots prefix.
+    Game: '{prefix}help'
