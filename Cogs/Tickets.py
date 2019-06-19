@@ -10,8 +10,11 @@ import random
 import asyncio
 
 class TicketsCog(commands.Cog, name = ":tickets: Tickets (Server Only)"):
-    def __init__(self, bot, support_channel):
+    def __init__(self, bot):
         self.bot = bot
+        global support_id
+        with open('./Config.yml') as file:
+            support_id = yaml.load(file, Loader = yaml.Loader)['Tickets']['Support Channel ID']
         print("Loaded TicketsCog.")
 
     @commands.Cog.listener()
@@ -23,14 +26,14 @@ class TicketsCog(commands.Cog, name = ":tickets: Tickets (Server Only)"):
                     with open(self.bot.ticket_folder + "/{}.txt".format(str(message.channel.id)), "a+") as file:
                         file.write("[{} EST] {}: {}\n".format(datetime_obj.strftime("%b-%d-%Y | %X"), message.author.name, message.content))
 
-    def is_support_channel(id):
+    def is_support_channel():
         async def check_channel(ctx):
-            return ctx.channel.id == id
+            return ctx.channel.id == support_id
         return commands.check(check_channel)
 
     @commands.command(name='new', help = 'Open a new support ticket - please include a reason.')
     @commands.guild_only()
-    @is_support_channel(support_channel)
+    @is_support_channel()
     async def new_ticket(self, ctx, *, reason = "No Reason"):
         print("{} is creating a ticket for {}".format(ctx.author.name, reason))
 
@@ -357,7 +360,4 @@ class TicketsCog(commands.Cog, name = ":tickets: Tickets (Server Only)"):
             await ctx.channel.edit(name = re.sub(r'^\w-', '', name))
 
 def setup(bot):
-    global support_channel
-    with open("./Config.yml", 'r') as file:
-        support_channel = yaml.load(file, Loader = yaml.Loader)['Tickets']['Support Channel ID']
     bot.add_cog(TicketsCog(bot))

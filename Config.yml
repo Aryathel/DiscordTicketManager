@@ -39,7 +39,7 @@ Tickets:
   # If this is 'true', all conversations in ticket channels will be recorded and sent to
   # the owner of the ticket after the ticket is closed.
   # NOTE: This option can get a little bit more intensive on your computer,
-  # so I recommend not using this on lower level servers.
+  # so I recommend not using this on lower level servers/computers, or if you have a large number of tickets.
   Log All Tickets: true
 
   # The folder where all logs will get stored.
