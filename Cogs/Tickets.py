@@ -35,10 +35,7 @@ class TicketsCog(commands.Cog, name = ":tickets: Tickets (Server Only)"):
     @commands.guild_only()
     @is_support_channel()
     async def new_ticket(self, ctx, *, reason = "No Reason"):
-        print("{} is creating a ticket for {}".format(ctx.author.name, reason))
-
         await ctx.message.delete()
-
         await ctx.trigger_typing()
         found = False
         for role in ctx.guild.roles:
@@ -49,14 +46,14 @@ class TicketsCog(commands.Cog, name = ":tickets: Tickets (Server Only)"):
             if self.bot.use_timestamp:
                 embed = discord.Embed(
                     title = "Failed to Create Ticket",
-                    description = "This server does not have a `{}` role set up. Please contact a server administrator to solve this.".format(self.bot.support_role_name),
+                    description = "This server does not have a `{}` role. Please contact a server administrator to solve this issue.".format(self.bot.support_role_name),
                     color = random.choice(self.bot.embed_colors),
                     timestamp = datetime.datetime.now(datetime.timezone.utc)
                 )
             else:
                 embed = discord.Embed(
                     title = "Failed to Create Ticket",
-                    description = "This server does not have a `{}` role set up. Please contact a server administrator to solve this.".format(self.bot.support_role_name),
+                    description = "This server does not have a `{}` role. Please contact a server administrator to solve this issue.".format(self.bot.support_role_name),
                     color = random.choice(self.bot.embed_colors)
                 )
             if self.bot.show_command_author:
@@ -111,7 +108,10 @@ class TicketsCog(commands.Cog, name = ":tickets: Tickets (Server Only)"):
                     support_role: discord.PermissionOverwrite(read_messages = True),
                     ctx.author: discord.PermissionOverwrite(read_messages = True)
                 }
-                ch = await ctx.guild.create_text_channel('ticket-{}'.format(ctx.author.id), overwrites = overwrites, topic = "Reason: " + reason)
+                if self.bot.ask_for_reason == True:
+                    ch = await ctx.guild.create_text_channel('ticket-{}'.format(ctx.author.id), overwrites = overwrites, topic = "Reason: " + reason)
+                else:
+                    ch = await ctx.guild.create_text_channel('ticket-{}'.format(ctx.author.id), overwrites = overwrites)
                 self.bot.ticket_data.append({"Creator": str(ctx.author), "ID": ch.id, "UserID": ctx.author.id})
                 with open(self.bot.ticket_file, 'w+') as file:
                     file.write(json.dumps(self.bot.ticket_data, indent = 4, sort_keys = True))
@@ -119,19 +119,28 @@ class TicketsCog(commands.Cog, name = ":tickets: Tickets (Server Only)"):
                 if self.bot.use_timestamp:
                     embed = discord.Embed(
                         title = "New Ticket",
+                        description = self.bot.support_message,
                         color = random.choice(self.bot.embed_colors),
                         timestamp = datetime.datetime.now(datetime.timezone.utc)
                     )
                 else:
                     embed = discord.Embed(
                         title = "New Ticket",
+                        description = self.bot.support_message,
                         color = random.choice(self.bot.embed_colors)
                     )
-                embed.add_field(
-                    name = "Reason for Ticket:",
-                    value = reason,
-                    inline = False
-                )
+                if self.bot.ask_for_reason == True:
+                    embed.add_field(
+                        name = "Reason for Ticket",
+                        value = reason,
+                        inline = False
+                    )
+                else:
+                    embed.add_field(
+                        name = "Reason",
+                        value = "Please state your reason for opening this ticket.",
+                        inline = False
+                    )
                 embed.set_author(
                     name = ctx.author.name,
                     icon_url = ctx.author.avatar_url
@@ -145,14 +154,14 @@ class TicketsCog(commands.Cog, name = ":tickets: Tickets (Server Only)"):
                 if self.bot.use_timestamp:
                     embed = discord.Embed(
                         title = "Ticket Created",
-                        description = "Please head to the {} channel to continue.".format(ch.mention),
+                        description = "Please head to {} to continue.".format(ch.mention),
                         color = random.choice(self.bot.embed_colors),
                         timestamp = datetime.datetime.now(datetime.timezone.utc)
                     )
                 else:
                     embed = discord.Embed(
                         title = "Ticket Created",
-                        description = "Please head to the {} channel to continue.".format(ch.mention),
+                        description = "Please head to {} to continue.".format(ch.mention),
                         color = random.choice(self.bot.embed_colors)
                     )
                 if self.bot.show_command_author:
@@ -172,8 +181,6 @@ class TicketsCog(commands.Cog, name = ":tickets: Tickets (Server Only)"):
     @commands.command(name = 'close', help = 'Close an open support ticket - use in a ticket channel')
     @commands.guild_only()
     async def close_ticket(self, ctx):
-        print("{} is trying to close the ticket {}.".format(ctx.author.name, ctx.channel.name))
-
         if self.bot.use_timestamp:
             await ctx.message.delete()
 
@@ -186,14 +193,14 @@ class TicketsCog(commands.Cog, name = ":tickets: Tickets (Server Only)"):
             if self.bot.use_timestamp:
                 embed = discord.Embed(
                     title = "Failed to Close Ticket",
-                    description = "This command can only be used inside a channel for a ticket.",
+                    description = "This command can only be used inside a ticket channel.",
                     color = random.choice(self.bot.embed_colors),
                     timestamp = datetime.datetime.now(datetime.timezone.utc)
                 )
             else:
                 embed = discord.Embed(
                     title = "Failed to Close Ticket",
-                    description = "This command can only be used inside a channel for a ticket.",
+                    description = "This command can only be used inside a ticket channel.",
                     color = random.choice(self.bot.embed_colors),
                     timestamp = datetime.datetime.now(datetime.timezone.utc)
                 )
@@ -220,14 +227,14 @@ class TicketsCog(commands.Cog, name = ":tickets: Tickets (Server Only)"):
             if self.bot.use_timestamp:
                 embed = discord.Embed(
                     title = 'Are you sure?',
-                    description = "Once confirmed, you cannot cancel this.\nTo confirm, type `{prefix}confirm`.\n*You have 10 seconds to respond.*".format(prefix = self.bot.prefix),
+                    description = "To confirm, type `{prefix}confirm`.\nOnce confirmed, you cannot cancel this.\n*You have 10 seconds to respond.*".format(prefix = self.bot.prefix),
                     color = random.choice(self.bot.embed_colors),
                     timestamp = datetime.datetime.now(datetime.timezone.utc)
                 )
             else:
                 embed = discord.Embed(
                     title = 'Are you sure?',
-                    description = "Once confirmed, you cannot cancel this.\nTo confirm, type `{prefix}confirm`.\n*You have 10 seconds to respond.*".format(prefix = self.bot.prefix),
+                    description = "To confirm, type `{prefix}confirm`.\nOnce confirmed, you cannot cancel this.\n*You have 10 seconds to respond.*".format(prefix = self.bot.prefix),
                     color = random.choice(self.bot.embed_colors)
                 )
             if self.bot.show_command_author:

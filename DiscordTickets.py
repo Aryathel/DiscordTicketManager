@@ -44,6 +44,8 @@ else:
     bot.ticket_data = []
 bot.log_tickets = config['Tickets']['Log All Tickets']
 bot.support_channel_id = config['Tickets']['Support Channel ID']
+bot.support_message = config['Tickets']['New Ticket Message']
+bot.ask_for_reason = config['Tickets']['Ask For Reason']
 
 extensions = [
     'Cogs.General',
@@ -101,11 +103,18 @@ async def dfs_help(ctx):
             name = ctx.author.name,
             icon_url = ctx.author.avatar_url
         )
-    embed.add_field(
-        name = bot.prefix + "new <reason>",
-        value = "Creates a support ticket for the given reason.\nCan only be used in {mention}.".format(mention = bot.get_channel(bot.support_channel_id).mention),
-        inline = False
-    )
+    if bot.ask_for_reason:
+        embed.add_field(
+            name = bot.prefix + "new <reason>",
+            value = "Creates a support ticket for the given reason.\nCan only be used in {mention}.".format(mention = bot.get_channel(bot.support_channel_id).mention),
+            inline = False
+        )
+    else:
+        embed.add_field(
+            name = bot.prefix + "new",
+            value = "Creates a support ticket.\nCan only be used in {mention}.".format(mention = bot.get_channel(bot.support_channel_id).mention),
+            inline = False
+        )
     embed.add_field(
         name = bot.prefix + "close",
         value = "Closes a ticket. Can only be used in a ticket channel.",

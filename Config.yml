@@ -1,3 +1,8 @@
+# NOTE: Make sure that the bot has permissions to create channels, edit channels,
+# manage roles, send files, send messages, and view text channels permissions in
+# your server, or else the bot will not work. (The safest bet is to just add it
+# as an admin)
+
 # Here is where you put your bot token.
 TOKEN: NTE2NDkzNzM3NTg1NjcyMTkz.XQphNg.J6TZg34urIw0agKgKFPvMJZKL0M
 
@@ -36,11 +41,19 @@ Tickets:
   # The ID of the support channel.
   Support Channel ID: 590939131534901284
 
+  # The message that gets sent along with the message at the beginning of the ticket channel.
+  New Ticket Message: This is your new ticket! Please wait a few moments until our support team can get to you.
+
+  # If this is 'true', users will be prompted to give a reason for opening
+  # their ticket along with their ticket:
+  # '?new I need help' is an example of this.
+  Ask For Reason: true
+
   # If this is 'true', all conversations in ticket channels will be recorded and sent to
   # the owner of the ticket after the ticket is closed.
   # NOTE: This option can get a little bit more intensive on your computer,
   # so I recommend not using this on lower level servers/computers, or if you have a large number of tickets.
-  Log All Tickets: true
+  Log All Tickets: false
 
   # The folder where all logs will get stored.
   Ticket Log Folder: './Cogs/TicketData'
